@@ -1,0 +1,289 @@
+# This code is developed for to demonstrate the Proposed Three Step Methodology (for Performing Prescriptive Maintenance of the Fluid Filling Machine) discussed in the paper.
+import numpy as np
+import pandas as pd
+from scipy.stats import ttest_1samp
+import scipy.stats as st
+import random as rd
+
+Data = pd.read_csv("/PathToFileLocation/FileName.csv")
+
+SamplingDistribution_Second1 = list()
+SamplingDistribution_Second2 = list()
+SamplingDistribution_Second3 = list()
+SamplingDistribution_Second4 = list()
+SamplingDistribution_Second5 = list()
+SamplingDistribution_Second6 = list()
+SamplingDistribution_Second7 = list()
+SamplingDistribution_Second8 = list()
+SamplingDistribution_Second9 = list()
+SamplingDistribution_Second10 = list()
+SamplingDistribution_Second11 = list()
+SamplingDistribution_Second12 = list()
+SamplingDistribution_Second13 = list()
+PopGrad = list()
+
+i = 0 # Starting the iteration loop for determining sampling distribution
+
+
+while i < 150: #Creating a sampling distribution with 150 sample means
+      # Sampling processes for creating the Sampling Distribution
+      ProcessName = Data["Process Name"].tolist()
+      chosen_sample_process = rd.sample(ProcessName, 50)
+      #print(chosen_sample_process)
+
+      # Subset the data based on the chosen samples.
+      FilteredData = Data[Data["Process Name"].isin(chosen_sample_process)]
+      #print(FilteredData)
+
+      # For the sub-set dataframe determine the mean for every second and store it in a variable
+      Second_Mean= FilteredData.groupby(['Process Second'])['Pressure'].mean()
+      Second_Mean = list(Second_Mean)
+      # print(Second_Mean)
+
+      # Store the mean values in a dedicated list
+      SamplingDistribution_Second1.append(Second_Mean[0])
+      SamplingDistribution_Second2.append(Second_Mean[1])
+      SamplingDistribution_Second3.append(Second_Mean[2])
+      SamplingDistribution_Second4.append(Second_Mean[3])
+      SamplingDistribution_Second5.append(Second_Mean[4])
+      SamplingDistribution_Second6.append(Second_Mean[5])
+      SamplingDistribution_Second7.append(Second_Mean[6])
+      SamplingDistribution_Second8.append(Second_Mean[7])
+      SamplingDistribution_Second9.append(Second_Mean[8])
+      SamplingDistribution_Second10.append(Second_Mean[9])
+      SamplingDistribution_Second11.append(Second_Mean[10])
+      SamplingDistribution_Second12.append(Second_Mean[11])
+      SamplingDistribution_Second13.append(Second_Mean[12])
+
+      # Using the mean pressure at every second, find mean rate of change in pressure (gradient increase in pressure) during the hold operation for each sample.
+      G_Sample = (((Second_Mean[9] - Second_Mean[8]) / Second_Mean[8]) + ((Second_Mean[10] - Second_Mean[9]) / Second_Mean[9]) + ((Second_Mean[11] - Second_Mean[10]) / Second_Mean[11]) + ((Second_Mean[12] - Second_Mean[11]) / Second_Mean[12]))
+      PopGrad.append(G_Sample)
+      i = i+1
+
+#From the sample means, determine the mean of the sampling distribution at every second
+Mean_SamplingDistribution_Second1 = sum(SamplingDistribution_Second1)/len(SamplingDistribution_Second1)
+Mean_SamplingDistribution_Second2 = sum(SamplingDistribution_Second2)/len(SamplingDistribution_Second2)
+Mean_SamplingDistribution_Second3 = sum(SamplingDistribution_Second3)/len(SamplingDistribution_Second3)
+Mean_SamplingDistribution_Second4 = sum(SamplingDistribution_Second4)/len(SamplingDistribution_Second4)
+Mean_SamplingDistribution_Second5 = sum(SamplingDistribution_Second5)/len(SamplingDistribution_Second5)
+Mean_SamplingDistribution_Second6 = sum(SamplingDistribution_Second6)/len(SamplingDistribution_Second6)
+Mean_SamplingDistribution_Second7 = sum(SamplingDistribution_Second7)/len(SamplingDistribution_Second7)
+Mean_SamplingDistribution_Second8 = sum(SamplingDistribution_Second8)/len(SamplingDistribution_Second8)
+Mean_SamplingDistribution_Second9 = sum(SamplingDistribution_Second9)/len(SamplingDistribution_Second9)
+Mean_SamplingDistribution_Second10 = sum(SamplingDistribution_Second10)/len(SamplingDistribution_Second10)
+Mean_SamplingDistribution_Second11 = sum(SamplingDistribution_Second11)/len(SamplingDistribution_Second11)
+Mean_SamplingDistribution_Second12 = sum(SamplingDistribution_Second12)/len(SamplingDistribution_Second12)
+Mean_SamplingDistribution_Second13 = sum(SamplingDistribution_Second13)/len(SamplingDistribution_Second13)
+
+#From the sample means, determine the Standard deviation of the sampling distribution at every second
+SD_SamplingDistribution_Second1 = (sum([((x-Mean_SamplingDistribution_Second1)**2) for x in SamplingDistribution_Second1])/len(SamplingDistribution_Second1))**0.5
+SD_SamplingDistribution_Second2 = (sum([((x-Mean_SamplingDistribution_Second2)**2) for x in SamplingDistribution_Second2])/len(SamplingDistribution_Second2))**0.5
+SD_SamplingDistribution_Second3 = (sum([((x-Mean_SamplingDistribution_Second3)**2) for x in SamplingDistribution_Second3])/len(SamplingDistribution_Second3))**0.5
+SD_SamplingDistribution_Second4 = (sum([((x-Mean_SamplingDistribution_Second4)**2) for x in SamplingDistribution_Second4])/len(SamplingDistribution_Second4))**0.5
+SD_SamplingDistribution_Second5 = (sum([((x-Mean_SamplingDistribution_Second5)**2) for x in SamplingDistribution_Second5])/len(SamplingDistribution_Second5))**0.5
+SD_SamplingDistribution_Second6 = (sum([((x-Mean_SamplingDistribution_Second6)**2) for x in SamplingDistribution_Second6])/len(SamplingDistribution_Second6))**0.5
+SD_SamplingDistribution_Second7 = (sum([((x-Mean_SamplingDistribution_Second7)**2) for x in SamplingDistribution_Second7])/len(SamplingDistribution_Second7))**0.5
+SD_SamplingDistribution_Second8 = (sum([((x-Mean_SamplingDistribution_Second8)**2) for x in SamplingDistribution_Second8])/len(SamplingDistribution_Second8))**0.5
+SD_SamplingDistribution_Second9 = (sum([((x-Mean_SamplingDistribution_Second9)**2) for x in SamplingDistribution_Second9])/len(SamplingDistribution_Second9))**0.5
+SD_SamplingDistribution_Second10 =(sum([((x-Mean_SamplingDistribution_Second10)**2) for x in SamplingDistribution_Second10])/len(SamplingDistribution_Second10))**0.5
+SD_SamplingDistribution_Second11 =(sum([((x-Mean_SamplingDistribution_Second11)**2) for x in SamplingDistribution_Second11])/len(SamplingDistribution_Second11))**0.5
+SD_SamplingDistribution_Second12 =(sum([((x-Mean_SamplingDistribution_Second12)**2) for x in SamplingDistribution_Second12])/len(SamplingDistribution_Second12))**0.5
+SD_SamplingDistribution_Second13 =(sum([((x-Mean_SamplingDistribution_Second13)**2) for x in SamplingDistribution_Second13])/len(SamplingDistribution_Second13))**0.5
+
+PopulationMean = pd.DataFrame({'second-1': [Mean_SamplingDistribution_Second1],
+                               'second-2': [Mean_SamplingDistribution_Second2],
+                               'second-3': [Mean_SamplingDistribution_Second3],
+                               'second-4': [Mean_SamplingDistribution_Second4],
+                               'second-5': [Mean_SamplingDistribution_Second5],
+                               'second-6': [Mean_SamplingDistribution_Second6],
+                               'second-7': [Mean_SamplingDistribution_Second7],
+                               'second-8': [Mean_SamplingDistribution_Second8],
+                               'second-9': [Mean_SamplingDistribution_Second9],
+                               'second-10': [Mean_SamplingDistribution_Second10],
+                               'second-11': [Mean_SamplingDistribution_Second11],
+                               'second-12': [Mean_SamplingDistribution_Second12],
+                               'second-13': [Mean_SamplingDistribution_Second13]})
+pd.set_option('display.max_columns', None)
+#print('\n', PopulationMean)
+
+PopulationSD = pd.DataFrame({'second-1': [SD_SamplingDistribution_Second1],
+                               'second-2': [SD_SamplingDistribution_Second2],
+                               'second-3': [SD_SamplingDistribution_Second3],
+                               'second-4': [SD_SamplingDistribution_Second4],
+                               'second-5': [SD_SamplingDistribution_Second5],
+                               'second-6': [SD_SamplingDistribution_Second6],
+                               'second-7': [SD_SamplingDistribution_Second7],
+                               'second-8': [SD_SamplingDistribution_Second8],
+                               'second-9': [SD_SamplingDistribution_Second9],
+                               'second-10': [SD_SamplingDistribution_Second10],
+                               'second-11': [SD_SamplingDistribution_Second11],
+                               'second-12': [SD_SamplingDistribution_Second12],
+                               'second-13': [SD_SamplingDistribution_Second13]})
+
+#print('\n', PopulationSD)
+
+                        # CODE TO IDENTIFY "SUCTION PROCESS" ANNOMALITY
+Test_1_SuctionAbnormality = pd.read_csv("SuctionAbnormality.csv") #Reading the sample anomali data
+
+#Determining the mean (pressure) at every second in the sample anomali data
+Mean_Sample_Second1 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 1)]
+T1 = Mean_Sample_Second1['Pressure']
+Mean_Sample_Second1 = np.mean(Mean_Sample_Second1['Pressure'])
+
+Mean_Sample_Second2 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 2)]
+T2 = Mean_Sample_Second2['Pressure']
+Mean_Sample_Second2 = np.mean(Mean_Sample_Second2['Pressure'])
+
+Mean_Sample_Second3 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 3)]
+T3 = Mean_Sample_Second3['Pressure']
+Mean_Sample_Second3 = np.mean(Mean_Sample_Second3['Pressure'])
+
+Mean_Sample_Second4 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 4)]
+T4 = Mean_Sample_Second4['Pressure']
+Mean_Sample_Second4 = np.mean(Mean_Sample_Second4['Pressure'])
+
+Mean_Sample_Second5 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 5)]
+T5 = Mean_Sample_Second5['Pressure']
+Mean_Sample_Second5 = np.mean(Mean_Sample_Second5['Pressure'])
+
+Mean_Sample_Second6 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 6)]
+T6 = Mean_Sample_Second6['Pressure']
+Mean_Sample_Second6 = np.mean(Mean_Sample_Second6['Pressure'])
+
+Mean_Sample_Second7 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 7)]
+T7 = Mean_Sample_Second7['Pressure']
+Mean_Sample_Second7 = np.mean(Mean_Sample_Second7['Pressure'])
+
+Mean_Sample_Second8 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 8)]
+T8 = Mean_Sample_Second8['Pressure']
+Mean_Sample_Second8 = np.mean(Mean_Sample_Second8['Pressure'])
+
+Mean_Sample_Second9 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 9)]
+T9 = Mean_Sample_Second9['Pressure']
+Mean_Sample_Second9 = np.mean(Mean_Sample_Second9['Pressure'])
+
+Mean_Sample_Second10 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 10)]
+T10 = Mean_Sample_Second10['Pressure']
+Mean_Sample_Second10 = np.mean(Mean_Sample_Second10['Pressure'])
+
+Mean_Sample_Second11 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 11)]
+T11 = Mean_Sample_Second11['Pressure']
+Mean_Sample_Second11 = np.mean(Mean_Sample_Second11['Pressure'])
+
+Mean_Sample_Second12 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 12)]
+T12 = Mean_Sample_Second12['Pressure']
+Mean_Sample_Second12 = np.mean(Mean_Sample_Second12['Pressure'])
+
+Mean_Sample_Second13 = Test_1_SuctionAbnormality[(Test_1_SuctionAbnormality['Process Second'] == 13)]
+T13 = Mean_Sample_Second13['Pressure']
+Mean_Sample_Second13 = np.mean(Mean_Sample_Second13['Pressure'])
+
+SampleMeans = pd.DataFrame({'second-1': [Mean_Sample_Second1],
+                               'second-2': [Mean_Sample_Second2],
+                               'second-3': [Mean_Sample_Second3],
+                               'second-4': [Mean_Sample_Second4],
+                               'second-5': [Mean_Sample_Second5],
+                               'second-6': [Mean_Sample_Second6],
+                               'second-7': [Mean_Sample_Second7],
+                               'second-8': [Mean_Sample_Second8],
+                               'second-9': [Mean_Sample_Second9],
+                               'second-10': [Mean_Sample_Second10],
+                               'second-11': [Mean_Sample_Second11],
+                               'second-12': [Mean_Sample_Second12],
+                               'second-13': [Mean_Sample_Second13]})
+#print(SampleMeans)
+
+# One Sided Z-Test for the H0:"At a given second, the population mean is greater than the sample mean"
+pval1_1 = 1-st.norm.cdf((Mean_Sample_Second1 - Mean_SamplingDistribution_Second1)/(SD_SamplingDistribution_Second1/np.sqrt(len(SamplingDistribution_Second1))))
+pval1_2 = 1-st.norm.cdf((Mean_Sample_Second2 - Mean_SamplingDistribution_Second2)/(SD_SamplingDistribution_Second2/np.sqrt(len(SamplingDistribution_Second2))))
+pval1_3 = 1-st.norm.cdf((Mean_Sample_Second3 - Mean_SamplingDistribution_Second3)/(SD_SamplingDistribution_Second3/np.sqrt(len(SamplingDistribution_Second3))))
+pval1_4 = 1-st.norm.cdf((Mean_Sample_Second4 - Mean_SamplingDistribution_Second4)/(SD_SamplingDistribution_Second4/np.sqrt(len(SamplingDistribution_Second4))))
+pval1_5 = 1-st.norm.cdf((Mean_Sample_Second5 - Mean_SamplingDistribution_Second5)/(SD_SamplingDistribution_Second5/np.sqrt(len(SamplingDistribution_Second5))))
+pval1_6 = 1-st.norm.cdf((Mean_Sample_Second6 - Mean_SamplingDistribution_Second6)/(SD_SamplingDistribution_Second6/np.sqrt(len(SamplingDistribution_Second6))))
+pval1_7 = 1-st.norm.cdf((Mean_Sample_Second7 - Mean_SamplingDistribution_Second7)/(SD_SamplingDistribution_Second7/np.sqrt(len(SamplingDistribution_Second7))))
+pval1_8 = 1-st.norm.cdf((Mean_Sample_Second8 - Mean_SamplingDistribution_Second8)/(SD_SamplingDistribution_Second8/np.sqrt(len(SamplingDistribution_Second8))))
+
+#tval1_1, pval1_1 = ttest_1samp(T1,Mean_SamplingDistribution_Second1)
+#tval1_2, pval1_2 = ttest_1samp(T2,Mean_SamplingDistribution_Second2)
+#tval1_3, pval1_3 = ttest_1samp(T3,Mean_SamplingDistribution_Second3)
+#tval1_4, pval1_4 = ttest_1samp(T4,Mean_SamplingDistribution_Second4)
+#tval1_5, pval1_5 = ttest_1samp(T5,Mean_SamplingDistribution_Second5)
+#tval1_6, pval1_6 = ttest_1samp(T6,Mean_SamplingDistribution_Second6)
+#tval1_7, pval1_7 = ttest_1samp(T7,Mean_SamplingDistribution_Second7)
+#tval1_8, pval1_8 = ttest_1samp(T8,Mean_SamplingDistribution_Second8)
+#tval1_9, pval1_9 = ttest_1samp(T9,Mean_SamplingDistribution_Second9)
+#tval1_10, pval1_10 = ttest_1samp(T10,Mean_SamplingDistribution_Second10)
+#tval1_11, pval1_11 = ttest_1samp(T11,Mean_SamplingDistribution_Second11)
+#tval1_12, pval1_12 = ttest_1samp(T12,Mean_SamplingDistribution_Second12)
+#tval1_13, pval1_13 = ttest_1samp(T13,Mean_SamplingDistribution_Second13)
+
+print(pval1_1, pval1_2, pval1_3, pval1_4, pval1_5, pval1_6, pval1_7, pval1_8)
+
+#Checking the number of points (between the 3rd and 8th second of the suction process) which are having higher than normal values.
+CheckVal = 0
+
+if pval1_3 < 0.05:
+    CheckVal = CheckVal+1
+
+if pval1_4 < 0.05:
+    CheckVal = CheckVal+1
+
+if pval1_5 < 0.05:
+    CheckVal = CheckVal+1
+
+if pval1_6 < 0.05:
+    CheckVal = CheckVal+1
+
+if pval1_7 < 0.05:
+    CheckVal = CheckVal+1
+
+if pval1_8 < 0.05:
+    CheckVal = CheckVal+1
+
+if CheckVal >= 0.8*6: #If 80 percent of the points between seconds 3 to 8 (that is a total of 6 seconds) in the suction process are having abnormally high mean pressures.
+    print("ABNORMALITY IN SUCTION PROCESS")
+else:
+    print("NO ABNORMALITY IN SUCTION PROCESS")
+
+                            # CODE TO IDENTIFY "HOLD PROCESS" ABNORMALITY
+#Checking if the average increase in pressure during the hold operation (between the 9th and 13th second of the Health Check process) is higher than normal values.
+# Test_2_HoldAbnormality = pd.read_csv("HoldAbnormality.csv")
+
+PerAvgInc_Pop = sum(PopGrad)/ len(PopGrad)
+SD_AvgInc_Pop = (sum([((x-PerAvgInc_Pop)**2) for x in PopGrad])/len(PopGrad))**0.5
+
+#print(SD_AvgInc_Pop)
+print("Population Gradient = ", PerAvgInc_Pop)
+
+Process_Name = Test_1_SuctionAbnormality.groupby("Process Name")
+
+SampleGrad = []
+
+for PN, df_processname in Process_Name:
+    SM9 = df_processname[(df_processname['Process Second'] == 9)]
+    SM9 = SM9["Pressure"].values[0]
+    SM10 = df_processname[(df_processname['Process Second'] == 10)]
+    SM10 = SM10['Pressure'].values[0]
+    SM11 = df_processname[(df_processname['Process Second'] == 11)]
+    SM11 = SM11['Pressure'].values[0]
+    SM12 = df_processname[(df_processname['Process Second'] == 12)]
+    SM12 = SM12['Pressure'].values[0]
+    SM13 = df_processname[(df_processname['Process Second'] == 13)]
+    SM13 = SM13['Pressure'].values[0]
+    Grad = (((SM10 - SM9) / SM9) + ((SM11 - SM10) / SM10) + ((SM12 - SM11) / SM11) +((SM13 - SM12) / SM12))
+    Grad_2 = Grad/4
+    SampleGrad.append(Grad)
+
+Gradient_Sample = sum(SampleGrad)/len(SampleGrad)
+
+print("Sample Gradient = ", Gradient_Sample)
+
+# Z-Test to check if the average gradiant change in sample is beyond the limits.
+pval2_1 = 1-st.norm.cdf((Gradient_Sample - PerAvgInc_Pop)/(SD_AvgInc_Pop/np.sqrt(len(PopGrad))))
+
+if pval2_1 < 0.05:
+    print("ABNORMALITY IN HOLD PROCESS")
+else:
+    print(" NO ABNORMALITY IN HOLD PROCESS")
+
+print(pval2_1)
